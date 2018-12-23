@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
-import axios from "axios";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 
-// config
+import api from "../../helpers/api";
 import config from "../../config";
+import { saveAuthToken } from "../../actions/auth";
 
-export default class Login extends Component {
+class Login extends Component {
 
   constructor(props) {
     super(props);
@@ -22,19 +24,32 @@ export default class Login extends Component {
 
   _handleSubmit(e) {
     e.preventDefault();
+    const { saveAuthToken, history } = this.props;
     const { email, password } = this.state;
 
-    axios.post(`${config.API_ENDPOINT}/api/login`, { email, password })
+    api()
+      .post(`/login`, { email, password })
       .then(function (response) {
-        console.log(response);
+        if (response.status === 200) {
+          let { data } = response;
+          // decoding token.
+          data["details"] = JSON.parse(atob(data.token.split(".")[1]));
+          saveAuthToken(data);
+          if(data.details.role === "admin"){
+            history.push(`/admin`);
+            return;
+          }
+          history.push(`/`);
+          return;
+        }
+        alert("Invalid Username/Password, Please Try again.");
       })
       .catch(function (error) {
-        console.log(error);
+        alert("Invalid Username/Password, Please Try again.");
       });
   }
 
   _handleChange(e) {
-    console.log("obj: ", { [e.target.name]: e.target.value })
     this.setState({ [e.target.name]: e.target.value })
   }
 
@@ -50,12 +65,17 @@ export default class Login extends Component {
           <label htmlFor="exampleInputPassword1">Password</label>
           <input type="password" name="password" className="form-control" id="exampleInputPassword1" placeholder="Password" onChange={this._handleChange} />
         </div>
-        <div className="form-group form-check">
-          <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-          <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
+        <div className="form-group">
+          click here to <Link to="/register">Register</Link>
         </div>
         <button type="submit" className="btn btn-primary">Submit</button>
       </form>
     )
   }
 }
+
+const mapDispatchToProps = (dispatch) => ({
+  saveAuthToken: (token) => dispatch(saveAuthToken(token))
+})
+
+export default connect(null, mapDispatchToProps)(Login);

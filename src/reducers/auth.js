@@ -6,7 +6,7 @@ import actionTypes from "../actions";
  * Reducer to store logged in user 's token
  */
 
-export const token = (state = null, action) => {
+export const data = (state = null, action) => {
   switch (action.type) {
     case actionTypes.SAVE_OAUTH_TOKEN:
       return action.token;
@@ -21,6 +21,6 @@ export const token = (state = null, action) => {
 
 export default {
   auth: combineReducers({
-    token
+    data
   })
 };

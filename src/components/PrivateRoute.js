@@ -29,7 +29,7 @@ class PrivateRoute extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  token: _.get(state, "auth.token")
+  token: _.get(state, "auth.data.token")
 })
 
 export default connect(mapStateToProps)(PrivateRoute);

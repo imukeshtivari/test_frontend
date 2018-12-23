@@ -9,7 +9,7 @@ import rootReducer from "../reducers";
 const persistConfig = {
   key: "store",
   storage,
-  whitelist: ['auth', 'user']
+  whitelist: ['auth', 'user', 'cart']
 };
 
 let middleware;

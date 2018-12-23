@@ -1,6 +1,6 @@
 // ======================================================================================
 /*
- * save oauth token
+ * save auth token
  */
 export const SAVE_OAUTH_TOKEN = "SAVE_OAUTH_TOKEN";
 
@@ -15,7 +15,7 @@ export function saveAuthToken(token) {
 
 // ======================================================================================
 /*
- * delete oauth token
+ * delete auth token
  */
 export const DELETE_OAUTH_TOKEN = "DELETE_OAUTH_TOKEN";
 
