@@ -10,7 +10,7 @@ class Header extends Component {
     const { details } = this.props;
 
     return (
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+      <nav className="navbar navbar-expand-lg navbar-light bg-light mb-2">
         <NavLink className="navbar-brand" to="/admin">{`Welcome, ${details.name} ( ${details.role} )`}</NavLink>
         <ul className="navbar-nav">
           <li className="nav-item">

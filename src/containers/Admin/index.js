@@ -27,9 +27,10 @@ class Admin extends Component {
     api()
       .get(`/user`)
       .then((response) => {
+        console.log("response: ", response)
         if (response.status === 200) {
+          saveUserDetails(response.data);
           this.setState({ loading: false });
-          saveUserDetails(response.data)
           if (response.data.role !== "admin") {
             history.push("/login");
           }

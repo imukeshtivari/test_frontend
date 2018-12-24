@@ -26,8 +26,8 @@ class User extends Component {
       .get(`/user`)
       .then((response) => {
         if (response.status === 200) {
-          this.setState({ loading: false });
           saveUserDetails(response.data);
+          this.setState({ loading: false });
           if (response.data.role !== "user") {
             history.push("/login");
           }

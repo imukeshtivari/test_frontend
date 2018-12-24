@@ -29,13 +29,13 @@ class Login extends Component {
 
     api()
       .post(`/login`, { email, password })
-      .then(function (response) {
+      .then((response) => {
         if (response.status === 200) {
           let { data } = response;
           // decoding token.
           data["details"] = JSON.parse(atob(data.token.split(".")[1]));
           saveAuthToken(data);
-          if(data.details.role === "admin"){
+          if (data.details.role === "admin") {
             history.push(`/admin`);
             return;
           }
@@ -44,7 +44,7 @@ class Login extends Component {
         }
         alert("Invalid Username/Password, Please Try again.");
       })
-      .catch(function (error) {
+      .catch((error) => {
         alert("Invalid Username/Password, Please Try again.");
       });
   }
@@ -66,7 +66,7 @@ class Login extends Component {
           <input type="password" name="password" className="form-control" id="exampleInputPassword1" placeholder="Password" onChange={this._handleChange} />
         </div>
         <div className="form-group">
-          click here to <Link to="/register">Register</Link>
+          Click here to <Link to="/register">Register</Link>
         </div>
         <button type="submit" className="btn btn-primary">Submit</button>
       </form>

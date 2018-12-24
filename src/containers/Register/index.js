@@ -62,7 +62,7 @@ class Register extends Component {
           <input type="password" name="password" className="form-control" id="password" placeholder="Password" onChange={this._handleChange} />
         </div>
         <div className="form-group">
-          click here to <Link to="/login">Login</Link>
+          Click here to <Link to="/login">Login</Link>
         </div>
         <button type="submit" className="btn btn-primary">Submit</button>
       </form>
