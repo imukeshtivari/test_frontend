@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import api from "../../../helpers/api";
 
 class EditCategory extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -16,46 +16,36 @@ class EditCategory extends Component {
     ].forEach((fn) => this[fn] = this[fn].bind(this));
   }
 
-  componentDidMount(){
+  componentDidMount() {
     const { match: { params: { id } } } = this.props;
 
     api()
       .get(`/admin/categories/${id}`)
-      .then((response) => {
-        if (response.status === 200) {
-          this.setState({ loading: false, name:  response.data.category.name});
-        }
-      })
-      .catch((error) => alert("error in getting category details."))
+      .then((response) => this.setState({ loading: false, name: response.data.category.name }))
+      .catch(() => alert("error in getting category details."))
   }
-  
-  _handleSubmit(e){
+
+  _handleSubmit(e) {
     e.preventDefault();
     const { match: { params: { id } } } = this.props;
 
     api()
-    .put(`/admin/categories/${id}`, this.state)
-    .then((response) => {
-      if(response.status === 200){
-        alert("category updated successfully.");
-        return;
-      }
-      alert("something went wrong.")
-    })
-    .catch((err) => alert("something went wrong."));
+      .put(`/admin/categories/${id}`, this.state)
+      .then(() => alert("category updated successfully."))
+      .catch(() => alert("something went wrong."));
 
   }
 
-  render(){
+  render() {
     const { loading, name } = this.state;
 
-    if(loading) return (<h4>loading...</h4>);
+    if (loading) return (<h4>loading...</h4>);
 
     return (
-      <form  className="form-inline" onSubmit={this._handleSubmit}>
+      <form className="form-inline" onSubmit={this._handleSubmit}>
         <div className="form-group">
           <label htmlFor="name">Category Name</label>
-          <input type="text" className="form-control mx-2" name="name" id="name" placeholder="Enter category name" value={name}  onChange={(e) => this.setState({ [e.target.name]: e.target.value })}/>
+          <input type="text" className="form-control mx-2" name="name" id="name" placeholder="Enter category name" value={name} onChange={(e) => this.setState({ [e.target.name]: e.target.value })} />
         </div>
         <button type="submit" className="btn btn-primary">Update</button>
       </form>

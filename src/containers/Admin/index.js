@@ -6,7 +6,7 @@ import _ from "lodash";
 import api from "../../helpers/api";
 import { saveUserDetails } from "../../actions/user";
 
-import Header from "../../components/layout/AdminHeader";
+import Header from "../../components/layout/Header";
 import Products from "./Products";
 import Categories from "./Categories";
 import Users from "./Users";
@@ -27,21 +27,19 @@ class Admin extends Component {
     api()
       .get(`/user`)
       .then((response) => {
-        console.log("response: ", response)
-        if (response.status === 200) {
-          saveUserDetails(response.data);
-          this.setState({ loading: false });
-          if (response.data.role !== "admin") {
-            history.push("/login");
-          }
-          return;
+        saveUserDetails(response.data);
+
+        this.setState({ loading: false });
+
+        if (response.data.role !== "admin") {
+          history.push("/login");
         }
-        history.push("/login");
       })
-      .catch((error) => history.push("/login"))
+      .catch(() => history.push("/login"))
   }
 
   render() {
+    const { match: { url } } = this.props;
 
     if (this.state.loading) return (<h2>Loading...</h2>)
 
@@ -49,11 +47,11 @@ class Admin extends Component {
       <div className="admin">
         <Header />
         <Switch>
-          <Route path="/admin/categories" component={Categories} />
-          <Route path="/admin/products" component={Products} />
-          <Route path="/admin/orders" component={Orders} />
-          <Route path="/admin/users" component={Users} />
-          <Redirect to="/admin/categories" />
+          <Route path={`${url}/categories`} component={Categories} />
+          <Route path={`${url}/products`} component={Products} />
+          <Route path={`${url}/orders`} component={Orders} />
+          <Route path={`${url}/users`} component={Users} />
+          <Redirect to={`${url}/categories`} />
         </Switch>
       </div>
     )
@@ -62,10 +60,13 @@ class Admin extends Component {
 
 const mapStateToProps = (state) => ({
   token: _.get(state, "auth.data.token")
-})
+});
 
 const mapDispatchToProps = (dispatch) => ({
   saveUserDetails: (payload) => dispatch(saveUserDetails(payload))
-})
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(Admin);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Admin);

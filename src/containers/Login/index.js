@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
 import api from "../../helpers/api";
-import config from "../../config";
 import { saveAuthToken } from "../../actions/auth";
 
 class Login extends Component {
@@ -30,23 +29,20 @@ class Login extends Component {
     api()
       .post(`/login`, { email, password })
       .then((response) => {
-        if (response.status === 200) {
-          let { data } = response;
-          // decoding token.
-          data["details"] = JSON.parse(atob(data.token.split(".")[1]));
-          saveAuthToken(data);
-          if (data.details.role === "admin") {
-            history.push(`/admin`);
-            return;
-          }
-          history.push(`/`);
+        let { data } = response;
+
+        // decoding token.
+        data["details"] = JSON.parse(atob(data.token.split(".")[1]));
+        saveAuthToken(data);
+
+        if (data.details.role === "admin") {
+          history.push(`/admin`);
           return;
         }
-        alert("Invalid Username/Password, Please Try again.");
+        history.push(`/`);
+        return;
       })
-      .catch((error) => {
-        alert("Invalid Username/Password, Please Try again.");
-      });
+      .catch(() => alert("Invalid Username/Password, Please Try again."));
   }
 
   _handleChange(e) {
@@ -55,7 +51,7 @@ class Login extends Component {
 
   render() {
     return (
-      <form className="login my-5" onSubmit={this._handleSubmit}>
+      <form className="login col-4 mx-auto my-5" onSubmit={this._handleSubmit}>
         <div className="form-group">
           <label htmlFor="exampleInputEmail1">Email address</label>
           <input type="email" name="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" onChange={this._handleChange} />

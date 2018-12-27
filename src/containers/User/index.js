@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import { Switch, Route, Redirect, Link } from "react-router-dom";
+import { Switch, Route, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import _ from "lodash";
 
 import api from "../../helpers/api";
 import { saveUserDetails } from "../../actions/user";
 
-import Header from "../../components/layout/UserHeader";
+import Header from "../../components/layout/Header";
 import Products from "./Products";
 import Cart from "./Cart";
 
@@ -25,17 +25,15 @@ class User extends Component {
     api()
       .get(`/user`)
       .then((response) => {
-        if (response.status === 200) {
-          saveUserDetails(response.data);
-          this.setState({ loading: false });
-          if (response.data.role !== "user") {
-            history.push("/login");
-          }
-          return;
+        saveUserDetails(response.data);
+
+        this.setState({ loading: false });
+
+        if (response.data.role !== "user") {
+          history.push("/login");
         }
-        history.push("/login");
       })
-      .catch((error) => history.push("/login"))
+      .catch(() => history.push("/login"))
   }
 
   render() {
@@ -48,16 +46,16 @@ class User extends Component {
         <Switch>
           <Route path="/" component={Products} exact />
           <Route path="/cart" component={Cart} />
-          <Route 
+          <Route
             render={() => (
               <div>
                 <h3>
                   Sorry, page not found (404)
                 </h3>
-                <br/>
+                <br />
                 Go to <Link to="/">Home</Link>
               </div>
-            )} 
+            )}
           />
         </Switch>
       </div>

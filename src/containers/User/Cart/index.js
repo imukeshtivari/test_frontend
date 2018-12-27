@@ -26,17 +26,13 @@ class Cart extends Component {
   _deleteFromCart(id) {
     if (!window.confirm("Are you sure, you want to remove?")) return;
 
-    const { deleteProduct } = this.props;
-
-    deleteProduct(id);
+    this.props.deleteProduct(id);
   }
 
   _updateQuantity(quantity, product) {
-    const { updateProduct } = this.props;
-
     if (parseInt(quantity) <= 0) return;
 
-    updateProduct({ ...product, quantity });
+    this.props.updateProduct({ ...product, quantity });
   }
 
   _renderFooter() {
@@ -67,11 +63,11 @@ class Cart extends Component {
 
     api()
       .post("/orders", obj)
-      .then((response) => {
+      .then(() => {
         emptyCart();
         alert("Order placed successfully.");
       })
-      .catch((error) => alert("Something went wrong."))
+      .catch(() => alert("Something went wrong."))
   }
 
   render() {

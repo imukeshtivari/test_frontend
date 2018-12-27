@@ -1,10 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from "react-router-dom";
-import { connect } from "react-redux";
 
 import api from "../../helpers/api";
-import config from "../../config";
-import { saveAuthToken } from "../../actions/auth";
 
 class Register extends Component {
 
@@ -25,19 +22,16 @@ class Register extends Component {
 
   _handleSubmit(e) {
     e.preventDefault();
-    const { saveAuthToken, history } = this.props;
+    const { history } = this.props;
 
     api()
       .post(`/register`, this.state)
-      .then((response) => {
-        if (response.status === 200) {
-          alert("Registration is successful.");
-          history.push(`/login`);
-          return;
-        }
-        alert("Something went wrong, Please Try again.");
+      .then(() => {
+        alert("Registration is successful.");
+        history.push(`/login`);
+        return;
       })
-      .catch((error) => alert("Something went wrong, Please Try again."));
+      .catch(() => alert("Something went wrong, Please Try again."));
   }
 
   _handleChange(e) {
@@ -46,7 +40,7 @@ class Register extends Component {
 
   render() {
     return (
-      <form className="register my-5" onSubmit={this._handleSubmit}>
+      <form className="register col-4 mx-auto my-5" onSubmit={this._handleSubmit}>
         <div className="form-group">
           <label htmlFor="name">Full name</label>
           <input type="text" name="name" className="form-control" id="name" aria-describedby="emailHelp" placeholder="Enter full name" onChange={this._handleChange} />
@@ -70,8 +64,4 @@ class Register extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  saveAuthToken: (token) => dispatch(saveAuthToken(token))
-})
-
-export default connect(null, mapDispatchToProps)(Register);
+export default Register;

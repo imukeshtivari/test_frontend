@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import api from "../../../helpers/api";
 
 class EditProduct extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.defaultState = {
@@ -26,23 +26,19 @@ class EditProduct extends Component {
     ].forEach((fn) => this[fn] = this[fn].bind(this));
   }
 
-  _clear(){
+  _clear() {
     const { loading, ...rest } = this.defaultState;
     this.setState(rest);
   }
 
-  _loadCategories(){
+  _loadCategories() {
     api()
       .get(`/admin/categories`)
-      .then((response) => {
-        if (response.status === 200) {
-          this.setState({ categories: response.data.categories });
-        }
-      })
-      .catch((error) => alert("error in loading categories."))
+      .then((response) => this.setState({ categories: response.data.categories }))
+      .catch(() => alert("error in loading categories."))
   }
 
-  componentDidMount(){
+  componentDidMount() {
     const { match: { params: { id } } } = this.props;
 
     this._loadCategories();
@@ -50,40 +46,32 @@ class EditProduct extends Component {
     api()
       .get(`/admin/products/${id}`)
       .then((response) => {
-        if (response.status === 200) {
-          const { product } = response.data;
+        const { product } = response.data;
 
-          this.setState({ 
-            loading: false, 
-            ...product
-          });
-        }
+        this.setState({
+          loading: false,
+          ...product
+        });
       })
-      .catch((error) => alert("error in getting prouct details."))
+      .catch(() => alert("error in getting prouct details."))
   }
 
-  _handleSubmit(e){
+  _handleSubmit(e) {
     e.preventDefault();
     const { match: { params: { id } } } = this.props;
-    
+
     api()
-    .put(`/admin/products/${id}`, this.state)
-    .then((response) => {
-      if(response.status === 200){
-        alert("Product updated successfully.");
-        return;
-      }
-      alert("Something went wrong.")
-    })
-    .catch((err) => alert("Something went wrong."));
+      .put(`/admin/products/${id}`, this.state)
+      .then(() => alert("Product updated successfully."))
+      .catch(() => alert("Something went wrong."));
   }
 
-  _handleChange(e){
+  _handleChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
 
-  _handleFile(e){
-    if(!e.target.files.length) return;
+  _handleFile(e) {
+    if (!e.target.files.length) return;
 
     const image = e.target.files[0];
 
@@ -91,20 +79,15 @@ class EditProduct extends Component {
     payload.append("image", image, image.name);
 
     api()
-    .post("/admin/upload", payload)
-    .then((response) => {
-      if(response.status === 200){
-        this.setState({image: response.data.url});
-        return;
-      }
-    })
-    .catch(() => this.setState({ image: ""}))
+      .post("/admin/upload", payload)
+      .then((response) => this.setState({ image: response.data.url }))
+      .catch(() => this.setState({ image: "" }))
   }
 
-  render(){
+  render() {
     const { loading, title, category_id, price, description, categories } = this.state;
-    
-    if(loading) return (<h4>Loading...</h4>)
+
+    if (loading) return (<h4>Loading...</h4>)
 
     return (
       <form className="" onSubmit={this._handleSubmit}>
@@ -112,7 +95,7 @@ class EditProduct extends Component {
         <div className="form-row">
           <div className="form-group col-md-4">
             <label htmlFor="title">Title</label>
-            <input type="text" name="title" className="form-control" id="title" placeholder="Enter product name" value={title} onChange={this._handleChange}/>
+            <input type="text" name="title" className="form-control" id="title" placeholder="Enter product name" value={title} onChange={this._handleChange} />
           </div>
 
           <div className="form-group col-md-4">
@@ -120,7 +103,7 @@ class EditProduct extends Component {
             <select className="form-control" name="category_id" id="category_id" value={category_id} onChange={this._handleChange}>
               <option value="">Select</option>
               {(categories || []).map((category) => (
-                <option  key={category.id} value={category.id}>{category.name}</option>
+                <option key={category.id} value={category.id}>{category.name}</option>
               ))}
             </select>
           </div>
@@ -138,7 +121,7 @@ class EditProduct extends Component {
 
         <div className="form-group">
           <label htmlFor="description">Description</label>
-          <textarea className="form-control" id="description" name="description" rows="3"  value={description} onChange={this._handleChange} />
+          <textarea className="form-control" id="description" name="description" rows="3" value={description} onChange={this._handleChange} />
         </div>
         <button type="submit" className="btn btn-primary">Update</button>
         <button type="reset" className="btn btn-danger ml-1" onClick={this._clear}>Clear</button>

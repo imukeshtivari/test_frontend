@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Link, Switch, Route } from "react-router-dom";
 import { connect } from "react-redux";
 import _ from "lodash";
 
@@ -22,41 +21,37 @@ class Products extends Component {
     ].map((fn) => this[fn] = this[fn].bind(this));
   }
 
-  _getProducts(){
+  _getProducts() {
     api()
-    .get(`/products`)
-    .then((response) => {
-      if (response.status === 200) {
-        this.setState({ loading: false, products: response.data.products });
-      }
-    })
-    .catch((error) => alert("error in loading products."))
+      .get(`/products`)
+      .then((response) => this.setState({ loading: false, products: response.data.products }))
+      .catch(() => alert("error in loading products."))
   }
 
   componentDidMount() {
     this._getProducts();
   }
 
-  _addToCart(product){
+  _addToCart(product) {
     const { addProduct, cart } = this.props;
     let f = true;
 
     (cart || []).forEach((c) => {
-      if(c.id === product.id){
+      if (c.id === product.id) {
         f = false;
       }
     })
 
-    if(!f) {
+    if (!f) {
       alert("Product is already in cart.");
       return;
     }
 
     const quantity = parseInt(window.prompt("Enter Quantity: ")) || 0;
 
-    if(!quantity) return;
+    if (!quantity) return;
 
-    addProduct({...product, quantity});
+    addProduct({ ...product, quantity });
   }
 
   render() {
@@ -66,7 +61,7 @@ class Products extends Component {
 
     return (
       <div className="products">
-        {(products.length)? (
+        {(products.length) ? (
           <div className="row">
             {(products || []).map((product) => (
               <div key={product.id} className="col-md-3 py-3">
@@ -82,9 +77,9 @@ class Products extends Component {
               </div>
             ))}
           </div>
-        ):(
-          <h4>No products found.</h4>
-        )}
+        ) : (
+            <h4>No products found.</h4>
+          )}
       </div>
     )
   }
@@ -99,6 +94,6 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(
-  mapStateToProps, 
+  mapStateToProps,
   mapDispatchToProps
 )(Products);
